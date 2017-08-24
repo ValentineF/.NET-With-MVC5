@@ -1,0 +1,164 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core.dll" #>
+<#@ assembly name="System.Data.dll" #>
+<#@ assembly name="System.Data.DataSetExtensions.dll" #>
+<#@ assembly name="System.Xml.dll" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.Xml" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Data" #>
+<#@ import namespace="System.Data.SqlClient" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.IO" #>
+<#@ output extension=".txt" #>
+<#@ include file="./DbHelper.ttinclude"#>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using App.Common;
+using App.IBLL;
+using App.Models.Sys;
+using Microsoft.Practices.Unity;
+using App.AdminWeb.Core;
+
+namespace App.Web.Controllers
+{
+    public class <#=config.TableName.Replace("tbl_","")#>Controller : BaseController
+    {
+        [Dependency]
+        public I<#=config.TableName.Replace("tbl_","")#>BLL <#=config.TableName.Replace("tbl_","")#>BLL { get; set; }
+        public ValidationErrors errors = new ValidationErrors();
+
+        #region 查询
+        [SupportFilter]
+        public ActionResult Index()
+        {
+            ViewBag.perm = GetPermission();
+            return View();
+        }
+        [HttpPost]
+        public JsonResult GetList(GridPager pager,string queryStr)
+        {
+            List<<#=config.TableName.Replace("tbl_","")#>Model> modelList = <#=config.TableName.Replace("tbl_","")#>BLL.GetList(ref pager, queryStr);
+            var json = new
+            {
+                total = pager.totalRows,
+                rows = (from r in modelList
+                        select new <#=config.TableName.Replace("tbl_","")#>Model() {
+<#				foreach( DbColumn column in DbHelper.GetDbColumns(config.ConnectionString,config.DbDatabase,config.TableName)){ #>
+						<#=column.ColumnName#> = r.<#=column.ColumnName#>,
+<# } #>
+                        }).ToArray()
+            };
+            return Json(json, JsonRequestBehavior.AllowGet);
+        }
+        #endregion
+        #region 创建
+        [SupportFilter(ActionName = "Create")]
+        public ActionResult Create()
+        {
+            ViewBag.perm = GetPermission();
+            return View();
+        }
+        [HttpPost]
+        public JsonResult Create(<#=config.TableName.Replace("tbl_","")#>Model model)
+        {
+            if (model != null)
+            {
+                if (<#=config.TableName.Replace("tbl_","")#>BLL.Create(ref errors, model))
+                {
+                    LogHandler.WriteServiceLog(GetUserId(), "id:" + model.Id + ",Name:" + model.Name, "成功", "创建", "<#=config.TableName.Replace("tbl_","")#>管理");
+                    return Json(JsonHandler.CreateMessage(1, Suggestion.InsertSucceed));
+                }
+                else
+                {
+                    string errorMes = errors.Error;
+                    LogHandler.WriteServiceLog(GetUserId(), "id:" + model.Id + ",Name:" + model.Name + "," + errorMes, "失败", "创建", "<#=config.TableName.Replace("tbl_","")#>管理");
+                    return Json(JsonHandler.CreateMessage(0, Suggestion.InsertFail + errorMes));
+                }
+            }
+            else
+            {
+                return Json(JsonHandler.CreateMessage(0, Suggestion.InsertFail));
+            }
+        }
+        #endregion
+        #region 修改
+        [SupportFilter(ActionName = "Edit")]
+        public ActionResult Edit(string id)
+        {
+            ViewBag.perm = GetPermission();
+            <#=config.TableName.Replace("tbl_","")#>Model model = <#=config.TableName.Replace("tbl_","")#>BLL.GetById(id);
+            return View(model);
+        }
+
+        [HttpPost]
+        [SupportFilter(ActionName = "Edit")]
+        public JsonResult Edit(<#=config.TableName.Replace("tbl_","")#>Model model)
+        {
+            if (model != null)
+            {
+                if (<#=config.TableName.Replace("tbl_","")#>BLL.Edit(ref errors, model))
+                {
+                    LogHandler.WriteServiceLog(GetUserId(), "id:" + model.Id + ",Name:" + model.Name, "成功", "修改", "<#=config.TableName.Replace("tbl_","")#>管理");
+                    return Json(JsonHandler.CreateMessage(1, Suggestion.EditSucceed));
+                }
+                else
+                {
+                    string errorMes = errors.Error;
+                    LogHandler.WriteServiceLog(GetUserId(), "id:" + model.Id + ",Name:" + model.Name + "," + errorMes, "失败", "修改", "<#=config.TableName.Replace("tbl_","")#>管理");
+                    return Json(JsonHandler.CreateMessage(0, Suggestion.EditFail + errorMes));
+                }
+            }
+            else
+            {
+                return Json(JsonHandler.CreateMessage(0, Suggestion.EditFail));
+            }
+        }
+        #endregion
+        #region 详细
+        [SupportFilter(ActionName = "Details")]
+        public ActionResult Details(string id)
+        {
+            <#=config.TableName.Replace("tbl_","")#>Model model = <#=config.TableName.Replace("tbl_","")#>BLL.GetById(id);
+            return View(model);
+        }
+        #endregion
+        #region 删除
+        [HttpPost]
+        [SupportFilter(ActionName = "Delete")]
+        public JsonResult Delete(string id)
+        {
+            if (!string.IsNullOrWhiteSpace(id))
+            {
+                if (<#=config.TableName.Replace("tbl_","")#>BLL.Delete(ref errors, id))
+                {
+                    LogHandler.WriteServiceLog(GetUserId(), "id:" + id, "成功", "删除", "<#=config.TableName.Replace("tbl_","")#>管理");
+                    return Json(JsonHandler.CreateMessage(1, Suggestion.DeleteSucceed));
+                }
+                else
+                {
+                    string errorMes = errors.Error;
+                    LogHandler.WriteServiceLog(GetUserId(), "id:" + id + "," + errorMes, "失败", "删除", "<#=config.TableName.Replace("tbl_","")#>管理");
+                    return Json(JsonHandler.CreateMessage(0, Suggestion.DeleteFail + errorMes));
+                }
+            }
+            else
+            {
+                return Json(JsonHandler.CreateMessage(0, Suggestion.DeleteFail));
+            }
+        }
+        #endregion
+	}
+}
+<#+
+    public class config
+    {
+        public static readonly string ConnectionString="";
+        public static readonly string DbDatabase="";
+        public static readonly string TableName="tbl_RegistrationEmployment";
+        public static readonly string nameSpace="Apps.Sys";
+    }
+#>

@@ -1,0 +1,37 @@
+﻿
+<
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using App.Common;
+using App.IBLL;
+using App.Models.Sys;
+using Microsoft.Practices.Unity;
+using App.AdminWeb.Core;
+
+namespace App.Web.Controllers
+{
+    public class RegistrationEmploymentController : BaseController
+    {
+        [Dependency]
+        public IRegistrationEmploymentBLL RegistrationEmploymentBLL { get; set; }
+        public ValidationErrors errors = new ValidationErrors();
+
+        #region 查询
+        [SupportFilter]
+        public ActionResult Index()
+        {
+            ViewBag.perm = GetPermission();
+            return View();
+        }
+        [HttpPost]
+        public JsonResult GetList(GridPager pager,string queryStr)
+        {
+            List<RegistrationEmploymentModel> modelList = RegistrationEmploymentBLL.GetList(ref pager, queryStr);
+            var json = new
+            {
+                total = pager.totalRows,
+                rows = (from r in modelList
+                        select new RegistrationEmploymentModel() {

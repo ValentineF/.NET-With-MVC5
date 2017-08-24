@@ -1,0 +1,46 @@
+﻿
+<
+
+@using App.Web.Core;
+@using App.Common;
+@using App.Models.Sys;
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Index_Layout.cshtml";
+
+    List<permModel> perm = ViewBag.perm;
+    if (perm == null)
+    {
+        perm = new List<permModel>();
+    }
+}
+ <div class="mvctool" >
+	<input id="txtQuery" type="text" class="searchText" />
+	@Html.ToolButton("btnQuery", "fa fa-search", Suggestion.Query,ref perm, "Query",  true)
+	@Html.ToolButton("btnCreate", "fa fa-plus", Suggestion.Create, ref perm, "Create", true)
+	@Html.ToolButton("btnEdit", "fa fa-pencil", Suggestion.Edit, ref perm, "Edit", true)
+	@Html.ToolButton("btnDetails", "fa fa-list", Suggestion.Details,ref perm, "Details", true)
+	@Html.ToolButton("btnDelete", "fa fa-trash", Suggestion.Delete, ref perm, "Delete", true)
+</div>
+<table id="List"></table>
+
+<div id="modalwindow" class="easyui-window" data-options="modal:true,width:800,height:530,closed:true,minimizable:false,shadow:false"></div>
+
+<script type="text/javascript">
+ $(function () {
+        $('#List').datagrid({
+            url: '@Url.Action("GetList")',
+            width: SetGridWidthSub(10),
+            methord: 'post',
+            height: SetGridHeightSub(35),
+            fitColumns: true,
+            sortName: 'Id',
+            sortOrder: 'desc',
+            idField: 'Id',
+            pageSize: 10,
+            pageList: [10, 20, 30, 40, 50],
+            pagination: true,
+            striped: true, //奇偶行是否区分
+            singleSelect: true,//单选模式
+            //rownumbers: true,//行号
+            columns: [[

@@ -1,0 +1,22 @@
+﻿
+<
+@using EcoEdu.University.Common;
+@using App.Web.Core;
+@using App.Models.Sys;
+
+@model App.Models.Sys.ProfessorModel
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Index_LayoutEdit.cshtml";
+
+    List<permModel> perm = ViewBag.perm;
+    if (perm == null)
+    {
+        perm = new List<permModel>();
+    }
+}
+
+
+    <table class="formtable">
+        <tbody>

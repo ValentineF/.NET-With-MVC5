@@ -1,0 +1,56 @@
+﻿
+<
+@using EcoEdu.University.Common;
+@using App.Web.Core;
+@using App.Models.Sys;
+
+@model App.Models.Sys.ProfessorModel
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Index_LayoutEdit.cshtml";
+
+    List<permModel> perm = ViewBag.perm;
+    if (perm == null)
+    {
+        perm = new List<permModel>();
+    }
+}
+<script type="text/javascript">
+    $(function () {
+        $("#btnSave").click(function () {
+            if($("#EditForm").valid()){
+                $.ajax({
+                    url: "@Url.Action("Edit")",
+                    type: "Post",
+                    data: $("#EditForm").serialize(),
+                    dataType: "json",
+                    success: function (data) {
+                        if (data.type == 1) {
+                            window.parent.frameReturnByMes(data.message);
+                            window.parent.frameReturnByReload(true);
+                            window.parent.frameReturnByClose()
+                        }
+                        else {
+                            window.parent.frameReturnByMes(data.message);
+                        }
+                    }
+                });
+            }
+        });
+        $("#btnReturn").click(function () {
+            window.parent.frameReturnByClose();
+        });
+    });
+
+</script>
+
+<div class="mvctool bgb">
+    @Html.ToolButton("btnSave", "fa fa-save", "保存", ref perm, "Save", true)
+    @Html.ToolButton("btnReturn", "fa fa-reply", "返回", false)
+</div>
+@using (Html.BeginForm("Edit", "Professor", null, FormMethod.Post, new { Id = "EditForm" }))
+{
+	@Html.ValidationSummary(true)
+    <table class="formtable">
+        <tbody>

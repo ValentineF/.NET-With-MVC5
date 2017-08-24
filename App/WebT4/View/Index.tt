@@ -1,0 +1,152 @@
+﻿<#@ template debug="false" hostspecific="true" language="C#" #>
+<#@ assembly name="System.Core.dll" #>
+<#@ assembly name="System.Data.dll" #>
+<#@ assembly name="System.Data.DataSetExtensions.dll" #>
+<#@ assembly name="System.Xml.dll" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.Xml" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Data" #>
+<#@ import namespace="System.Data.SqlClient" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.IO" #>
+<#@ output extension=".txt" #>
+<#@ include file="../DbHelper.ttinclude" #>
+
+@using App.Web.Core;
+@using App.Common;
+@using App.Models.Sys;
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Index_Layout.cshtml";
+
+    List<permModel> perm = ViewBag.perm;
+    if (perm == null)
+    {
+        perm = new List<permModel>();
+    }
+}
+ <div class="mvctool" >
+	<input id="txtQuery" type="text" class="searchText" />
+	@Html.ToolButton("btnQuery", "fa fa-search", Suggestion.Query,ref perm, "Query",  true)
+	@Html.ToolButton("btnCreate", "fa fa-plus", Suggestion.Create, ref perm, "Create", true)
+	@Html.ToolButton("btnEdit", "fa fa-pencil", Suggestion.Edit, ref perm, "Edit", true)
+	@Html.ToolButton("btnDetails", "fa fa-list", Suggestion.Details,ref perm, "Details", true)
+	@Html.ToolButton("btnDelete", "fa fa-trash", Suggestion.Delete, ref perm, "Delete", true)
+</div>
+<table id="List"></table>
+
+<div id="modalwindow" class="easyui-window" data-options="modal:true,width:800,height:530,closed:true,minimizable:false,shadow:false"></div>
+
+<script type="text/javascript">
+ $(function () {
+        $('#List').datagrid({
+            url: '@Url.Action("GetList")',
+            width: SetGridWidthSub(10),
+            methord: 'post',
+            height: SetGridHeightSub(35),
+            fitColumns: true,
+            sortName: 'Id',
+            sortOrder: 'desc',
+            idField: 'Id',
+            pageSize: 10,
+            pageList: [10, 20, 30, 40, 50],
+            pagination: true,
+            striped: true, //奇偶行是否区分
+            singleSelect: true,//单选模式
+            //rownumbers: true,//行号
+            columns: [[
+<# foreach(DbColumn column in DbHelper.GetDbColumns(config.ConnectionString,config.DbDatabase,config.TableName)){ #>
+				{ field: '<#=column.ColumnName#>', title: '<#=column.ColumnName#>', width: 80, sortable: true },
+<# } #> 
+            ]]
+        });
+
+        //自动宽高
+        $(window).resize(function () {
+            $('#List').datagrid('resize', {
+                width: SetGridWidthSub(400),
+                height: SetGridHeightSub(45)
+            }).datagrid('resize', {
+                width: SetGridWidthSub(400),
+            });
+            
+        });
+    });
+
+
+
+    //ifram 返回
+    function frameReturnByClose() {
+        $("#modalwindow").window('close');
+    }
+    function frameReturnByReload(flag) {
+        if (flag)
+            $("#List").datagrid('reload');
+        else
+            $("#List").datagrid('load');
+    }
+
+    function frameReturnByMes(mes) {
+        $.messageBox5s('提示', mes);
+    }
+    $(function () {
+        $("#btnCreate").click(function () {
+            $("#modalwindow").html("<iframe id='editWin' width='100%' height='100%'  frameborder='0'' src='@Url.Action("Create")?Ieguid=" + GetGuid() + "'></iframe>");
+            $("#modalwindow").window({ title: '新增', width: 700, height: 500, iconCls: 'fa fa-plus' }).window('open');
+        });
+        $("#btnEdit").click(function () {
+            var row = $('#List').datagrid('getSelected');
+            if (row != null) {
+                $("#modalwindow").html("<iframe id='editWin' width='100%' height='100%'  frameborder='0' src='@Url.Action("Edit")?id=" + row.Id + "&Ieguid=" + GetGuid() + "'></iframe>");
+                $("#modalwindow").window({ title: '', width: 700, height: 470, iconCls: 'fa fa-pencil' }).window('open');
+            } else { $.messageBox5s('编辑', '@Suggestion.PlaseChooseToOperatingRecords'); }
+        });
+        $("#btnDelete").click(function () {
+            var row = $('#List').datagrid('getSelected');
+            if (row != null) {
+                $.messager.confirm('确认', '@Suggestion.YouWantToDeleteTheSelectedRecords', function (r) {
+                    if (r) {
+                        $.post("@Url.Action("Delete")?id=" + row.Id, function (data) {
+                            if (data.type == 1) {
+                                $("#List").datagrid('reload');
+                                $.messageBox5s('提示', data.message);
+                            } else {
+                                $.messageBox5s('提示', data.message);
+                            }
+                        }, "json");
+
+                    }
+                });
+            } else { $.messageBox5s('', '@Suggestion.PlaseChooseToOperatingRecords'); }
+        });
+		$('#btnQuery').click(function () {
+            var queryStr = $('#txtQuery').val();
+            if (queryStr == null) {
+                queryStr = "%";
+            }
+            $('#List').datagrid({
+                url: '@Url.Action("GetList")?queryStr='+ encodeURI(queryStr)
+            })
+        });
+		$('#btnDetails').click(function () {
+            var row = $('#List').datagrid('getSelected');
+            if (row != null) {
+                $('#modalwindow').html("<iframe id='editWin' width='100%' height='100%'  frameborder='0' src='@Url.Action("Details")?id=" + row.Id + "&leguid=" + GetGuid() + "'></iframe>");
+                $('#modalwindow').window({ title: '详细', width: 500, height: 300, iconCls: 'icon-details' }).window('open');
+            } else {
+                $.messageBox5s('提示', '@Suggestion.PlaseChooseToOperatingRecords');
+            }
+        });
+    });
+</script>
+
+<#+
+    public class config
+    {
+        public static readonly string ConnectionString="";
+        public static readonly string DbDatabase="";
+        public static readonly string TableName="tbl_Professor";
+        public static readonly string nameSpace="Apps.Sys";
+    }
+#>

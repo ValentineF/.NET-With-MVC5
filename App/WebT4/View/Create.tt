@@ -1,0 +1,93 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core.dll" #>
+<#@ assembly name="System.Data.dll" #>
+<#@ assembly name="System.Data.DataSetExtensions.dll" #>
+<#@ assembly name="System.Xml.dll" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.Xml" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Data" #>
+<#@ import namespace="System.Data.SqlClient" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.IO" #>
+<#@ output extension=".txt" #>
+<#@ include file="../DbHelper.ttinclude" #>
+@using App.Common;
+@using App.Web.Core;
+@using App.Models.Sys;
+
+@model App.Models.Sys.<#=config.TableName.Replace("tbl_","")#>Model
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Index_LayoutEdit.cshtml";
+
+    List<permModel> perm = ViewBag.perm;
+    if (perm == null)
+    {
+        perm = new List<permModel>();
+    }
+}
+<script type="text/javascript">
+    $(function () {
+        $("#btnSave").click(function () {
+            
+                $.ajax({
+                    url: "@Url.Action("Create")",
+                    type: "Post",
+                    data: $("#CreateForm").serialize(),
+                    dataType: "json",
+                    success: function (data) {
+                        if (data.type == 1) {
+                            window.parent.frameReturnByMes(data.message);
+                            window.parent.frameReturnByReload(true);
+                            window.parent.frameReturnByClose()
+                        }
+                        else {
+                            window.parent.frameReturnByMes(data.message);
+                        }
+                    }
+                });
+            
+        });
+        $("#btnReturn").click(function () {
+            window.parent.frameReturnByClose();
+        });
+    });
+
+</script>
+
+<div class="mvctool bgb">
+    @Html.ToolButton("btnSave", "fa fa-save", "保存", ref perm, "Save", true)
+    @Html.ToolButton("btnReturn", "fa fa-reply", "返回", false)
+</div>
+@using (Html.BeginForm("Create", "<#=config.TableName.Replace("tbl_","")#>", null, FormMethod.Post, new { Id = "CreateForm" }))
+{
+    <table class="formtable">
+        <tbody>
+<# foreach(DbColumn column in DbHelper.GetDbColumns(config.ConnectionString,config.DbDatabase,config.TableName)){ #>
+			<tr>
+                <th>
+                    @Html.LabelFor(model => model.<#=column.ColumnName#>)：
+                </th>
+                <td>
+                    @Html.EditorFor(model => model.<#=column.ColumnName#>)
+                </td>
+            </tr>
+<# } #>
+        </tbody>
+    </table>
+}
+
+
+
+
+<#+
+    public class config
+    {
+        public static readonly string ConnectionString="";
+        public static readonly string DbDatabase="";
+        public static readonly string TableName="tbl_Professor";
+        public static readonly string nameSpace="Apps.Sys";
+    }
+#>

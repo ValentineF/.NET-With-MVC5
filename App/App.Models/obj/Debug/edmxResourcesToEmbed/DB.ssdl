@@ -1,0 +1,309 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="DB.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="SysException">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="HelpLink" Type="varchar" MaxLength="500" />
+    <Property Name="Message" Type="varchar" MaxLength="500" />
+    <Property Name="Source" Type="varchar" MaxLength="500" />
+    <Property Name="StackTrace" Type="text" />
+    <Property Name="TargetSite" Type="varchar" MaxLength="500" />
+    <Property Name="Data" Type="varchar" MaxLength="500" />
+    <Property Name="CreateTime" Type="datetime" />
+  </EntityType>
+  <EntityType Name="SysLog">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="Operator" Type="varchar" MaxLength="50" />
+    <Property Name="Message" Type="varchar" MaxLength="500" />
+    <Property Name="Result" Type="varchar" MaxLength="20" />
+    <Property Name="Type" Type="varchar" MaxLength="20" />
+    <Property Name="Module" Type="varchar" MaxLength="20" />
+    <Property Name="CreateTime" Type="datetime" />
+  </EntityType>
+  <EntityType Name="SysModule">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="200" Nullable="false" />
+    <Property Name="EnglishName" Type="varchar" MaxLength="200" />
+    <Property Name="ParentId" Type="varchar" MaxLength="50" />
+    <Property Name="Url" Type="varchar" MaxLength="200" />
+    <Property Name="Iconic" Type="varchar" MaxLength="200" />
+    <Property Name="Sort" Type="int" />
+    <Property Name="Remark" Type="varchar" MaxLength="4000" />
+    <Property Name="Enable" Type="bit" />
+    <Property Name="CreatePerson" Type="varchar" MaxLength="200" />
+    <Property Name="CreateTime" Type="datetime" />
+    <Property Name="IsLast" Type="bit" Nullable="false" />
+    <Property Name="Version" Type="timestamp" StoreGeneratedPattern="Computed" />
+  </EntityType>
+  <EntityType Name="SysModuleOperate">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="varchar" MaxLength="200" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="200" Nullable="false" />
+    <Property Name="KeyCode" Type="varchar" MaxLength="200" Nullable="false" />
+    <Property Name="ModuleId" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="IsValid" Type="bit" Nullable="false" />
+    <Property Name="Sort" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="SysRight">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="varchar" MaxLength="200" Nullable="false" />
+    <Property Name="ModuleId" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="RoleId" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="Rightflag" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="SysRightOperate">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="varchar" MaxLength="200" Nullable="false" />
+    <Property Name="RightId" Type="varchar" MaxLength="200" Nullable="false" />
+    <Property Name="KeyCode" Type="varchar" MaxLength="200" Nullable="false" />
+    <Property Name="IsValid" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="SysRole">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="200" Nullable="false" />
+    <Property Name="Description" Type="varchar" MaxLength="4000" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="CreatePerson" Type="varchar" MaxLength="200" Nullable="false" />
+  </EntityType>
+  <EntityType Name="SysRoleSysUser">
+    <Key>
+      <PropertyRef Name="SysUserId" />
+      <PropertyRef Name="SysRoleId" />
+    </Key>
+    <Property Name="SysUserId" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="SysRoleId" Type="varchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="SysSample">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="50" />
+    <Property Name="Age" Type="int" />
+    <Property Name="Bir" Type="datetime" />
+    <Property Name="Photo" Type="varchar" MaxLength="50" />
+    <Property Name="Note" Type="text" />
+    <Property Name="CreateTime" Type="datetime" />
+  </EntityType>
+  <EntityType Name="SysUser">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="UserName" Type="varchar" MaxLength="200" Nullable="false" />
+    <Property Name="Password" Type="varchar" MaxLength="200" Nullable="false" />
+    <Property Name="TrueName" Type="varchar" MaxLength="200" />
+    <Property Name="Card" Type="varchar" MaxLength="50" />
+    <Property Name="MobileNumber" Type="varchar" MaxLength="200" />
+    <Property Name="PhoneNumber" Type="varchar" MaxLength="200" />
+    <Property Name="QQ" Type="varchar" MaxLength="50" />
+    <Property Name="EmailAddress" Type="varchar" MaxLength="200" />
+    <Property Name="OtherContact" Type="varchar" MaxLength="200" />
+    <Property Name="Province" Type="varchar" MaxLength="200" />
+    <Property Name="City" Type="varchar" MaxLength="200" />
+    <Property Name="Village" Type="varchar" MaxLength="200" />
+    <Property Name="Address" Type="varchar" MaxLength="200" />
+    <Property Name="State" Type="bit" />
+    <Property Name="CreateTime" Type="datetime" />
+    <Property Name="CreatePerson" Type="varchar" MaxLength="200" />
+    <Property Name="Sex" Type="varchar" MaxLength="10" />
+    <Property Name="Birthday" Type="datetime" />
+    <Property Name="JoinDate" Type="datetime" />
+    <Property Name="Marital" Type="varchar" MaxLength="10" />
+    <Property Name="Political" Type="varchar" MaxLength="50" />
+    <Property Name="Nationality" Type="varchar" MaxLength="20" />
+    <Property Name="Native" Type="varchar" MaxLength="20" />
+    <Property Name="School" Type="varchar" MaxLength="50" />
+    <Property Name="Professional" Type="varchar" MaxLength="100" />
+    <Property Name="Degree" Type="varchar" MaxLength="20" />
+    <Property Name="DepId" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="PosId" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="Expertise" Type="varchar" MaxLength="3000" />
+    <Property Name="JobState" Type="varchar" MaxLength="20" />
+    <Property Name="Photo" Type="varchar" MaxLength="200" />
+    <Property Name="Attach" Type="varchar" MaxLength="200" />
+  </EntityType>
+  <Association Name="FK_SysModule_SysModule">
+    <End Role="SysModule" Type="Self.SysModule" Multiplicity="0..1" />
+    <End Role="SysModule1" Type="Self.SysModule" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="SysModule">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="SysModule1">
+        <PropertyRef Name="ParentId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_SysModuleOperate_SysModule">
+    <End Role="SysModule" Type="Self.SysModule" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="SysModuleOperate" Type="Self.SysModuleOperate" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="SysModule">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="SysModuleOperate">
+        <PropertyRef Name="ModuleId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_SysRight_SysModule">
+    <End Role="SysModule" Type="Self.SysModule" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="SysRight" Type="Self.SysRight" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="SysModule">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="SysRight">
+        <PropertyRef Name="ModuleId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_SysRight_SysRole">
+    <End Role="SysRole" Type="Self.SysRole" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="SysRight" Type="Self.SysRight" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="SysRole">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="SysRight">
+        <PropertyRef Name="RoleId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_SysRightOperate_SysRight">
+    <End Role="SysRight" Type="Self.SysRight" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="SysRightOperate" Type="Self.SysRightOperate" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="SysRight">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="SysRightOperate">
+        <PropertyRef Name="RightId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_SysRoleSysUser_SysRole">
+    <End Role="SysRole" Type="Self.SysRole" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="SysRoleSysUser" Type="Self.SysRoleSysUser" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="SysRole">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="SysRoleSysUser">
+        <PropertyRef Name="SysRoleId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_SysRoleSysUser_SysUser">
+    <End Role="SysUser" Type="Self.SysUser" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="SysRoleSysUser" Type="Self.SysRoleSysUser" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="SysUser">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="SysRoleSysUser">
+        <PropertyRef Name="SysUserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Function Name="P_Sys_ClearUnusedRightOperate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="P_Sys_DeleteSysRoleSysUserByRoleId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="roleId" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="P_Sys_DeleteSysRoleSysUserByUserId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="userId" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="P_Sys_GetRightByRoleAndModule" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="roleId" Type="varchar" Mode="In" />
+    <Parameter Name="moduleId" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="P_Sys_GetRightOperate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="userId" Type="varchar" Mode="In" />
+    <Parameter Name="url" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="P_Sys_GetRoleByUserId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="UserId" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="P_Sys_GetUserByRoleId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="RoleId" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="P_Sys_InsertSysRight" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="P_Sys_UpdateSysRightRightFlag" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="moduleId" Type="varchar" Mode="In" />
+    <Parameter Name="roleId" Type="varchar" Mode="In" />
+  </Function>
+  <Function Name="P_Sys_UpdateSysRoleSysUser" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="roleId" Type="varchar" Mode="In" />
+    <Parameter Name="userId" Type="varchar" Mode="In" />
+  </Function>
+  <EntityContainer Name="DBStoreContainer">
+    <EntitySet Name="SysException" EntityType="Self.SysException" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="SysLog" EntityType="Self.SysLog" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="SysModule" EntityType="Self.SysModule" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="SysModuleOperate" EntityType="Self.SysModuleOperate" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="SysRight" EntityType="Self.SysRight" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="SysRightOperate" EntityType="Self.SysRightOperate" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="SysRole" EntityType="Self.SysRole" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="SysRoleSysUser" EntityType="Self.SysRoleSysUser" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="SysSample" EntityType="Self.SysSample" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="SysUser" EntityType="Self.SysUser" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_SysModule_SysModule" Association="Self.FK_SysModule_SysModule">
+      <End Role="SysModule" EntitySet="SysModule" />
+      <End Role="SysModule1" EntitySet="SysModule" />
+    </AssociationSet>
+    <AssociationSet Name="FK_SysModuleOperate_SysModule" Association="Self.FK_SysModuleOperate_SysModule">
+      <End Role="SysModule" EntitySet="SysModule" />
+      <End Role="SysModuleOperate" EntitySet="SysModuleOperate" />
+    </AssociationSet>
+    <AssociationSet Name="FK_SysRight_SysModule" Association="Self.FK_SysRight_SysModule">
+      <End Role="SysModule" EntitySet="SysModule" />
+      <End Role="SysRight" EntitySet="SysRight" />
+    </AssociationSet>
+    <AssociationSet Name="FK_SysRight_SysRole" Association="Self.FK_SysRight_SysRole">
+      <End Role="SysRole" EntitySet="SysRole" />
+      <End Role="SysRight" EntitySet="SysRight" />
+    </AssociationSet>
+    <AssociationSet Name="FK_SysRightOperate_SysRight" Association="Self.FK_SysRightOperate_SysRight">
+      <End Role="SysRight" EntitySet="SysRight" />
+      <End Role="SysRightOperate" EntitySet="SysRightOperate" />
+    </AssociationSet>
+    <AssociationSet Name="FK_SysRoleSysUser_SysRole" Association="Self.FK_SysRoleSysUser_SysRole">
+      <End Role="SysRole" EntitySet="SysRole" />
+      <End Role="SysRoleSysUser" EntitySet="SysRoleSysUser" />
+    </AssociationSet>
+    <AssociationSet Name="FK_SysRoleSysUser_SysUser" Association="Self.FK_SysRoleSysUser_SysUser">
+      <End Role="SysUser" EntitySet="SysUser" />
+      <End Role="SysRoleSysUser" EntitySet="SysRoleSysUser" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
